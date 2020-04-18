@@ -1,0 +1,49 @@
+---
+- name: Install microk8s Canonical Kubernetes
+  snap:
+    name: microk8s
+    classic: yes
+    channel: "1.18/stable"
+  notify: 
+    - reboot machine
+    - wait for microk8s up
+    - install microk8s addons
+
+- name: add /snap/bin to path
+  lineinfile: >
+    dest=/etc/environment
+    state=present
+    backrefs=yes
+    regexp='PATH=(["]*)((?!.*?/snap/bin).*?)(["]*)$'
+    line="PATH=\1\2:/snap/bin\3"
+
+- name: Setup Bash microuK8s alias
+  lineinfile:
+    dest: "/etc/bash_aliases"
+    create: yes
+    group: root
+    line: "alias kubectl='microk8s kubectl'"
+    mode: "0644"
+    owner: root
+    regexp: "^alias kubectl="
+
+- name: Source aliases file
+  lineinfile:
+    dest: /etc/bash.bashrc
+    line: "source /etc/bash_aliases"
+    state: present
+
+
+# change volume storagepath
+
+# sudo microk8s kubectl get -o yaml deploy hostpath-provisioner | \
+#   sed 's~/var/snap/microk8s/common/default-storage~/data/snap/microk8s/common/default-storage~g' | \
+#   sudo microk8s kubectl apply -f -
+
+# restart microk8s for good measure
+# sudo microk8s stop && sudo microk8s start
+
+# fix some pod errors***********(like elasticsearch why?)
+# echo "--allow-privileged" | sudo tee -a /var/snap/microk8s/current/args/kube-apiserver
+# # restart microk8s for changes to take effect
+# sudo microk8s stop && sudo microk8s start

@@ -1,0 +1,10 @@
+---
+- name: reboot machine
+  reboot:
+    reboot_timeout: 180
+
+- name: wait for microk8s up
+  command: microk8s status --wait-ready
+
+- name: install microk8s addons
+  command: microk8s enable dns storage dashboard ingress
