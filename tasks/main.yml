@@ -33,17 +33,4 @@
     line: "source /etc/bash_aliases"
     state: present
 
-
-# change volume storagepath
-
-# sudo microk8s kubectl get -o yaml deploy hostpath-provisioner | \
-#   sed 's~/var/snap/microk8s/common/default-storage~/data/snap/microk8s/common/default-storage~g' | \
-#   sudo microk8s kubectl apply -f -
-
-# restart microk8s for good measure
-# sudo microk8s stop && sudo microk8s start
-
-# fix some pod errors***********(like elasticsearch why?)
-# echo "--allow-privileged" | sudo tee -a /var/snap/microk8s/current/args/kube-apiserver
-# # restart microk8s for changes to take effect
-# sudo microk8s stop && sudo microk8s start
+- meta: flush_handlers
