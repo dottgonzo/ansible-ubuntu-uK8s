@@ -3,7 +3,6 @@
   snap:
     name: microk8s
     classic: yes
-    channel: "1.18/stable"
   notify: 
     - reboot machine
     - wait for microk8s up
